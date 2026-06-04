@@ -1,0 +1,875 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday My Love - Elegant Dynamic Memory Diary</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        outfit: ['Outfit', 'sans-serif'],
+                        signature: ['Great Vibes', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Great+Vibes&family=Caveat:wght@700&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle, #fff0f3 0%, #ffcad4 100%);
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .font-handwritten { font-family: 'Caveat', cursive; }
+        .font-signature { font-family: 'Great Vibes', cursive; }
+        
+        /* Notebook lined paper grid design with margins */
+        .diary-paper {
+            background-color: #fdfbf7;
+            background-image: 
+                linear-gradient(#e5e7eb 1.5px, transparent 1.5px),
+                linear-gradient(90deg, #fbc4d6 1.5px, transparent 1.5px);
+            background-size: 26px 26px;
+            box-shadow: inset 40px 0 0 #faf7f2;
+        }
+
+        /* Diagonal checkered gingham pink borders */
+        .gingham-border {
+            border: 16px solid;
+            border-image: repeating-linear-gradient(45deg, #ffa6c9, #ffa6c9 15px, #fff5f7 15px, #fff5f7 30px) 30;
+            box-shadow: 0 25px 50px -12px rgba(222, 107, 143, 0.4);
+        }
+
+        /* High-fidelity CSS Keyframe Animations */
+        @keyframes float-gentle {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
+        }
+        @keyframes float-reverse {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(10px) rotate(-3deg); }
+        }
+        @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes rose-fall {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+        }
+        @keyframes heartbeat-scale { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+        @keyframes flicker-candle { 0%, 100% { transform: scale(1) rotate(-2deg); opacity: 0.9; } 50% { transform: scale(1.15) rotate(2deg); opacity: 1; filter: drop-shadow(0 0 12px #f59e0b); } }
+        @keyframes balloon-rise {
+            0% { transform: translateY(120%) scale(1); opacity: 0; }
+            15% { opacity: 1; }
+            100% { transform: translateY(-150%) scale(0.9); opacity: 0; }
+        }
+        @keyframes particle-fade { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0); } }
+
+        .anim-float { animation: float-gentle 4s ease-in-out infinite; }
+        .anim-float-rev { animation: float-reverse 4.5s ease-in-out infinite; }
+        .anim-spin-vinyl { animation: spin-slow 10s linear infinite; }
+        .anim-heart { animation: heartbeat-scale 1.4s infinite ease-in-out; }
+        .anim-flicker { animation: flicker-candle 0.3s infinite alternate; }
+
+        .rose-petal {
+            position: fixed;
+            color: #ff758f;
+            font-size: 18px;
+            pointer-events: none;
+            z-index: 100;
+            animation: rose-fall 7s linear infinite;
+        }
+        .sparkle-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999;
+            width: 8px;
+            height: 8px;
+            background: #f43f5e;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #fda4af;
+            animation: particle-fade 0.8s forwards;
+        }
+        .party-balloon {
+            position: absolute;
+            bottom: 0;
+            z-index: 35;
+            animation: balloon-rise 7s linear infinite;
+        }
+        .visualizer-bar {
+            width: 5px;
+            background: linear-gradient(to top, #f43f5e, #ec4899);
+            border-radius: 3px;
+            height: 6px;
+            transition: height 0.1s ease;
+        }
+
+        @media (max-width: 768px) and (orientation: portrait) {
+            #rotate-notice { display: flex !important; }
+        }
+        
+        /* Interactive touch-slice canvas */
+        #cake-slash-canvas {
+            cursor: crosshair;
+            touch-action: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-6 relative select-none">
+
+    <!-- 🌸 GLOBAL FALLING ROSE PETALS BACKGROUND LAYER -->
+    <div id="global-rose-container" class="fixed inset-0 pointer-events-none z-10"></div>
+
+    <!-- 🔄 PORTRAIT ROTATE NOTICE -->
+    <div id="rotate-notice" class="hidden fixed inset-0 bg-gradient-to-tr from-rose-500 via-pink-600 to-purple-600 z-[99999] text-white flex-col items-center justify-center text-center p-6">
+        <div class="text-6xl mb-4 animate-bounce">🔄</div>
+        <h2 class="text-2xl font-bold mb-2">Please Rotate Your Mobile</h2>
+        <p class="text-sm opacity-90 max-w-xs">Beautiful memory diary-ti clear layout-e upobhog korar jonno phone-ti landscape (ararikh) ghurie nao.</p>
+    </div>
+
+    <!-- ⚡ SYSTEM SCREEN TRANSITION EFFECT -->
+    <div id="system-flash" class="fixed inset-0 bg-red-600 z-50 pointer-events-none opacity-0 transition-opacity duration-150"></div>
+
+    <!-- MAIN DIARY LANDSCAPE FRAME CARD -->
+    <div id="main-diary-card" class="w-full max-w-4xl aspect-[16/9] gingham-border rounded-[32px] bg-[#fdfbf7] relative overflow-hidden flex flex-col justify-between z-20">
+        
+        <!-- AUDIO SOUNDTRACK MODULE -->
+        <audio id="bg-romantic-music" loop>
+            <source id="audio-source-element" src="" type="audio/mpeg">
+        </audio>
+
+        <!-- Notebook Binder Holes Ring Design -->
+        <div class="absolute left-6 top-0 bottom-0 w-8 flex flex-col justify-around py-4 z-40 pointer-events-none">
+            <div class="w-5 h-5 bg-slate-800 rounded-full shadow-inner border-b-2 border-slate-700"></div>
+            <div class="w-5 h-5 bg-slate-800 rounded-full shadow-inner border-b-2 border-slate-700"></div>
+            <div class="w-5 h-5 bg-slate-800 rounded-full shadow-inner border-b-2 border-slate-700"></div>
+            <div class="w-5 h-5 bg-slate-800 rounded-full shadow-inner border-b-2 border-slate-700"></div>
+            <div class="w-5 h-5 bg-slate-800 rounded-full shadow-inner border-b-2 border-slate-700"></div>
+        </div>
+
+        <!-- ==================== SLIDE 1: INTRO COVER ==================== -->
+        <div id="slide-1" class="slide-view diary-paper h-full w-full flex flex-col justify-center items-center relative p-6">
+            <div class="absolute top-6 left-16 w-16 h-16 anim-float bg-rose-50 border-2 border-rose-200 rounded-2xl flex items-center justify-center p-2 shadow-md">
+                <svg class="w-full h-full text-rose-500 animate-pulse-soft" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 011.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </div>
+            <div class="absolute top-6 right-8 w-20 h-16 anim-float-rev flex items-center justify-center p-1">
+                <svg class="w-full h-full text-pink-400" viewBox="0 0 100 50">
+                    <path d="M10,50 A40,40 0 0,1 90,50" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" class="anim-shimmer" />
+                    <path d="M22,50 A28,28 0 0,1 78,50" fill="none" stroke="#fbc4d6" stroke-width="8" stroke-linecap="round" />
+                </svg>
+            </div>
+            <!-- Animated Sticker 3: Cute Vector Dancing Bunny Couple -->
+            <div class="absolute bottom-6 left-20 flex items-end gap-1 anim-float">
+                <div class="w-11 h-12 bg-white border-2 border-pink-200 rounded-full flex flex-col items-center justify-center p-1 relative shadow-inner">
+                    <div class="absolute -top-3 left-1 w-2.5 h-5 bg-white border-2 border-pink-200 rounded-t-full"></div>
+                    <div class="absolute -top-3 right-1 w-2.5 h-5 bg-white border-2 border-pink-200 rounded-t-full"></div>
+                    <div class="w-1.5 h-1.5 bg-slate-700 rounded-full"></div>
+                    <span class="text-[8px]">💖</span>
+                </div>
+                <span class="text-xl anim-heart">❤️</span>
+                <div class="w-11 h-12 bg-white border-2 border-pink-200 rounded-full flex flex-col items-center justify-center p-1 relative shadow-inner">
+                    <div class="absolute -top-3 left-1 w-2.5 h-5 bg-white border-2 border-pink-200 rounded-t-full"></div>
+                    <div class="absolute -top-3 right-1 w-2.5 h-5 bg-white border-2 border-pink-200 rounded-t-full"></div>
+                    <div class="w-1.5 h-1.5 bg-slate-700 rounded-full"></div>
+                    <span class="text-[8px]">🎀</span>
+                </div>
+            </div>
+            
+            <div class="absolute bottom-6 right-6 flex flex-col items-center space-y-1 z-30">
+                <span class="text-[10px] text-pink-600 font-extrabold tracking-widest uppercase animate-pulse">Open Diary</span>
+                <button onclick="changeSlide(2)" class="w-14 h-14 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-full shadow-lg flex items-center justify-center text-xl transition-all duration-300 border-4 border-white active:scale-95">
+                    👉
+                </button>
+            </div>
+
+            <div class="text-center space-y-3 pl-8 pb-12">
+                <h1 class="text-4xl sm:text-6xl font-handwritten font-black text-rose-600 tracking-wide drop-shadow-sm leading-tight animate-pulse-soft">
+                    HAPPY BIRTHDAY<br>MY QUEEN 👑
+                </h1>
+                <p class="text-lg sm:text-2xl text-pink-500 font-bold tracking-wider italic">Wishing You A Magical 20th Birthday ✨</p>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 2: INTEGRATED SURPRISE PARTY ZONE ==================== -->
+        <div id="slide-2" class="slide-view hidden diary-paper h-full w-full flex flex-col justify-center items-center relative p-6 overflow-hidden">
+            <div id="hanging-decorations-container" class="absolute top-0 left-10 right-10 h-10 flex justify-around pointer-events-none z-30 opacity-0 transition-opacity duration-500"></div>
+            <div id="balloons-container" class="absolute inset-0 pointer-events-auto overflow-hidden z-20"></div>
+
+            <div class="absolute bottom-4 right-6 flex flex-col items-center space-y-1 z-50">
+                <button id="party-interaction-btn" onclick="executePartyStep()" class="px-5 py-3 bg-gradient-to-r from-rose-500 to-pink-500 text-white font-extrabold rounded-full shadow-md text-xs tracking-wider border-2 border-white">
+                    ✨ Step 1: Decorate Room
+                </button>
+                <button id="party-next-btn" onclick="changeSlide(3)" class="hidden w-14 h-14 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-full shadow-lg flex items-center justify-center text-xl border-4 border-white animate-bounce">
+                    👉
+                </button>
+            </div>
+
+            <div class="flex flex-col items-center justify-center space-y-2 pl-10 pb-6 relative z-30">
+                <div id="cake-assembly-zone" class="w-64 h-44 flex items-end justify-center relative"></div>
+                <h2 id="party-zone-status" class="text-xl sm:text-2xl font-black text-rose-600 font-handwritten tracking-wide text-center">
+                    Let's celebrate your special day! 💖
+                </h2>
+                <p id="cake-interactive-tip" class="hidden text-[10px] text-slate-400 font-semibold italic animate-pulse">
+                    🎂 Slice/Swipe your finger horizontally across the candle flame to cut the cake!
+                </p>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 3: MADAM JI BIOGRAPHY ==================== -->
+        <div id="slide-3" class="slide-view hidden diary-paper h-full w-full flex flex-col justify-center items-center relative p-6">
+            <div class="absolute bottom-4 right-6 flex flex-col items-center space-y-1.5 z-30">
+                <button onclick="changeSlide(4)" class="w-14 h-14 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-full shadow-lg flex items-center justify-center text-xl border-4 border-white">
+                    👉
+                </button>
+            </div>
+
+            <div class="grid grid-cols-5 gap-6 items-center w-full max-w-3xl pl-10">
+                <div class="col-span-2 flex flex-col items-center space-y-3">
+                    <div class="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-4 border-rose-400 overflow-hidden shadow-xl relative animate-pulse-soft">
+                        <img id="render-img-madam" src="" alt="Madam Ji Profile" class="w-full h-full object-cover">
+                    </div>
+                    <span class="bg-yellow-300 border border-yellow-400 text-slate-800 text-[11px] font-bold px-4 py-1 rounded-full shadow-sm tracking-wider">madam ji 👑</span>
+                </div>
+
+                <div class="col-span-3 text-left space-y-2">
+                    <h2 class="text-2xl font-black text-rose-600 font-handwritten tracking-wide">HAPPY BIRTHDAY TO MY SOULMATE!</h2>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed italic bg-white/70 p-4 rounded-2xl border border-pink-100 shadow-inner max-h-40 overflow-y-auto font-medium">
+                        "Happy Birthday, my love! I wish you the very best for your future, filled with endless happiness, success, and peace. May all your dreams come true, and may you always have the strength and courage to keep moving forward no matter what."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 4: PHOTO COLLAGE ==================== -->
+        <div id="slide-4" class="slide-view hidden diary-paper h-full w-full flex flex-col justify-center items-center relative p-6">
+            <div class="absolute bottom-4 right-6 flex flex-col items-center space-y-1.5 z-30">
+                <button onclick="changeSlide(5)" class="w-14 h-14 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-full shadow-lg flex items-center justify-center text-xl border-4 border-white">
+                    👉
+                </button>
+            </div>
+
+            <div class="flex justify-center items-center gap-4 w-full max-w-3xl pl-10 font-sans">
+                <div class="bg-white p-2 rounded-2xl shadow-md border border-pink-100 rotate-[-5deg] hover:rotate-0 transition duration-300">
+                    <div class="w-20 h-20 sm:w-28 sm:h-28 rounded-xl overflow-hidden mb-1">
+                        <img id="render-img-love" src="" alt="My Love" class="w-full h-full object-cover">
+                    </div>
+                    <span class="text-[10px] font-bold text-rose-500 block text-center">My Love</span>
+                </div>
+                <div class="bg-white p-2 rounded-2xl shadow-xl border border-pink-100 translate-y-[-10px] rotate-[3deg] scale-105 transition duration-300">
+                    <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden mb-1">
+                        <img id="render-img-gf" src="" alt="Girlfriend" class="w-full h-full object-cover">
+                    </div>
+                    <span class="text-[10px] font-bold text-rose-500 block text-center">Beautiful GF</span>
+                </div>
+                <div class="bg-white p-2 rounded-2xl shadow-md border border-pink-100 rotate-[5deg] hover:rotate-0 transition duration-300">
+                    <div class="w-20 h-20 sm:w-28 sm:h-28 rounded-xl overflow-hidden mb-1">
+                        <img id="render-img-baby" src="" alt="My Baby" class="w-full h-full object-cover">
+                    </div>
+                    <span class="text-[10px] font-bold text-rose-500 block text-center">My Baby</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 5: PROMISE TIMELINE ==================== -->
+        <div id="slide-5" class="slide-view hidden diary-paper h-full w-full flex flex-col justify-center items-center relative p-6">
+            <div class="absolute bottom-4 right-6 flex flex-col items-center space-y-1.5 z-30">
+                <button onclick="changeSlide(6)" class="w-14 h-14 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-full shadow-lg flex items-center justify-center text-xl border-4 border-white">
+                    👉
+                </button>
+            </div>
+
+            <div class="w-full max-w-2xl pl-12 text-left space-y-4">
+                <h3 class="text-xl font-black text-rose-600 font-handwritten tracking-wide border-b border-pink-200 pb-1">✨ Our Beautiful Bonds & Promises</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white/80 p-3 rounded-xl border-l-4 border-rose-500 shadow-sm animate-pulse-soft">
+                        <span class="font-bold text-xs text-rose-600 block">🔒 Safe Haven</span>
+                        <p class="text-[11px] text-slate-600 italic">No matter how hard things get, you will always have my shoulder to lean on.</p>
+                    </div>
+                    <div class="bg-white/80 p-3 rounded-xl border-l-4 border-pink-500 shadow-sm">
+                        <span class="font-bold text-xs text-pink-600 block">🌸 Forever Happy</span>
+                        <p class="text-[11px] text-slate-600 italic">I promise to wipe your secret tears and bring out your absolute brightest smile.</p>
+                    </div>
+                    <div class="bg-white/80 p-3 rounded-xl border-l-4 border-purple-500 shadow-sm animate-pulse-soft">
+                        <span class="font-bold text-xs text-purple-600 block">🧸 Little Tantrums</span>
+                        <p class="text-[11px] text-slate-600 italic">Your silly endless fights and sweet tantrums are my absolute favorite routine.</p>
+                    </div>
+                    <div class="bg-white/80 p-3 rounded-xl border-l-4 border-orange-500 shadow-sm">
+                        <span class="font-bold text-xs text-orange-600 block">👑 Infinite Respect</span>
+                        <p class="text-[11px] text-slate-600 italic">Your choices, dreams, and self-respect will always be my topmost priority.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 6: AUDIO SOUNDPLAYER ==================== -->
+        <div id="slide-6" class="slide-view hidden diary-paper h-full w-full flex flex-col justify-center items-center relative p-6">
+            <div class="absolute bottom-4 right-6 flex flex-col items-center space-y-1.5 z-30">
+                <button onclick="changeSlide(7)" class="w-14 h-14 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-full shadow-lg flex items-center justify-center text-xl border-4 border-white">
+                    👉
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6 w-full max-w-3xl items-center pl-10 pb-12">
+                <div class="bg-rose-50/80 p-4 rounded-3xl border border-rose-100 shadow-md flex flex-col items-center space-y-2 relative">
+                    <div class="w-24 h-24 rounded-full bg-slate-900 border-4 border-white flex items-center justify-center relative shadow-lg shadow-rose-200" id="vinyl-disk">
+                        <div class="w-8 h-8 rounded-full bg-rose-200 border border-white flex items-center justify-center">
+                            <div class="w-2 h-2 rounded-full bg-slate-950"></div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="text-xs font-extrabold text-slate-800">Dynamic Ambient Track</h4>
+                        <p class="text-[9px] text-slate-500 font-semibold tracking-wider">Custom Selected Romantic Tune</p>
+                    </div>
+                    <div class="flex items-center gap-3 w-full px-2">
+                        <button onclick="toggleMusicPlayState()" id="music-play-toggle" class="px-3 py-1 bg-rose-500 text-white font-bold rounded-lg text-[10px] shadow">⏸️ Pause</button>
+                        <input type="range" id="synth-volume" class="w-full accent-rose-500 shadow-inner" value="60" min="0" max="100" oninput="adjustSynthVolume(this.value)">
+                    </div>
+                    <div class="flex items-end justify-center gap-1 w-full h-8" id="visualizer-container">
+                        <div class="visualizer-bar"></div><div class="visualizer-bar"></div><div class="visualizer-bar"></div><div class="visualizer-bar"></div><div class="visualizer-bar"></div><div class="visualizer-bar"></div><div class="visualizer-bar"></div><div class="visualizer-bar"></div>
+                    </div>
+                </div>
+
+                <div class="text-left space-y-2 bg-white/70 p-4 rounded-2xl border border-pink-100 shadow-inner max-h-44 overflow-y-auto">
+                    <h3 class="text-sm font-bold text-rose-500 tracking-wider font-handwritten flex items-center gap-1">🎵 Our Rhythm</h3>
+                    <p class="text-[11px] text-slate-600 leading-relaxed italic">
+                        "Whenever I hear our favorite song, I remember those sweet late-night drives, the countless hours we spent sharing silly jokes, and how you look so beautiful under the stars. I like me better when I'm with you."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 7: ENVELOPE OPEN & INSTAGRAM RE-DIRECT ==================== -->
+        <div id="slide-7" class="slide-view hidden diary-paper h-full w-full flex flex-col justify-center items-center relative p-6 overflow-hidden">
+            
+            <!-- INTERACTIVE LOVE ENVELOPE -->
+            <div id="envelope-wrapper" class="relative w-80 h-52 flex flex-col items-center justify-center cursor-pointer z-40 p-2 border-4 border-dashed border-pink-400 rounded-3xl bg-pink-50/70 shadow-lg" onclick="openEnvelopeLetter()">
+                <div class="absolute inset-2 bg-pink-300 border-2 border-pink-400 rounded-2xl shadow-2xl flex flex-col justify-end p-4">
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-rose-500 rounded-full flex items-center justify-center border-4 border-white shadow-lg anim-heart">
+                        <span class="text-xl">❤️</span>
+                    </div>
+                    <p class="text-[11px] text-white font-black text-center tracking-widest uppercase mb-1 drop-shadow animate-pulse">Tap to Open Letter 💌</p>
+                </div>
+                <!-- Envelope flap -->
+                <div class="absolute top-2 left-2 right-2 h-[45%] bg-pink-200 border-b-2 border-pink-300 rounded-t-2xl transform origin-top transition-transform duration-500" id="envelope-flap"></div>
+            </div>
+
+            <!-- HIDDEN SPECIAL LOVE LETTER FRAME -->
+            <div id="love-letter-display" class="hidden text-center space-y-4 max-w-2xl px-4 pl-10 relative z-30 animate-fade-in pb-8">
+                <span class="bg-rose-500 text-white text-[10px] tracking-[0.2em] font-extrabold px-5 py-1.5 rounded-full shadow-lg animate-pulse">LAST MESSAGE FOR YOU! 💌</span>
+                <p class="text-xs sm:text-[13px] text-slate-700 leading-relaxed font-semibold italic bg-rose-50/50 p-4 sm:p-5 rounded-2xl border border-rose-200/50 max-h-48 overflow-y-auto shadow-inner">
+                    "My love! I hope your feelings for me never fade... not even a little. I just want to keep spending my days with you — through every high, every fight, and every quiet moment in between. Please don't ever get tired of me, even when I'm not at my best. You're my only home, the place where my heart always finds peace when I'm tired. I just want to come back to you. So please, stay with me a little longer... or maybe, forever."
+                </p>
+                <!-- Clickable signature redirecting to Instagram -->
+                <div class="text-center z-50">
+                    <a id="render-insta-anchor" href="" target="_blank" class="font-signature text-rose-500 text-4xl tracking-wide font-black hover:opacity-80 transition-all">
+                        — Love, Sohom Giri ❤️
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== DYNAMIC BOTTOM CREDIT ROW (SOHOM GIRI WITH REDIRECT) ==================== -->
+        <div class="w-full bg-slate-900/10 px-6 py-1.5 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-500 z-45">
+            <span>Created with ❤️ by <a id="render-insta-footer-anchor" href="" target="_blank" class="text-rose-600 font-extrabold hover:underline">Sohom Giri</a></span>
+            <a id="render-insta-footer-handle" href="" target="_blank" class="flex items-center gap-1 text-pink-500 font-bold hover:underline">
+                📸 Instagram: @itz_sg_056
+            </a>
+        </div>
+
+    </div>
+
+    <!-- MAIN SOUND & VISUAL INTERACTION ENGINE -->
+    <script>
+        // ==================== 🛠️ GITHUB DIRECT CUSTOM VARIABLES (Edit Here!) ====================
+        const CONFIG_SETTING = {
+            // 1. Paste Your Custom Audio MP3 Link (Leave empty to use sweet lofi default)
+            custom_audio_url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+            
+            // 2. Paste Your Custom Images Links (Web URLs)
+            madam_ji_profile_pic: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=400",
+            my_love_pic: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=400",
+            beautiful_gf_pic: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400",
+            my_baby_pic: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400",
+            
+            // 3. Tomar Custom Instagram Profile Link
+            instagram_redirect_url: "https://instagram.com/itz_sg_056"
+        };
+        // =======================================================================================
+
+        let currentSlide = 1;
+        let isMelodyPlaying = false;
+        let melodyInterval = null;
+        let currentSurpriseStep = 1;
+
+        // Apply Config parameters cleanly on load
+        function initializeDirectConfig() {
+            const instaLink = CONFIG_SETTING.instagram_redirect_url || 'https://instagram.com/itz_sg_056';
+            document.getElementById('render-insta-anchor').href = instaLink;
+            document.getElementById('render-insta-footer-anchor').href = instaLink;
+            document.getElementById('render-insta-footer-handle').href = instaLink;
+
+            document.getElementById('render-img-madam').src = CONFIG_SETTING.madam_ji_profile_pic;
+            document.getElementById('render-img-love').src = CONFIG_SETTING.my_love_pic;
+            document.getElementById('render-img-gf').src = CONFIG_SETTING.beautiful_gf_pic;
+            document.getElementById('render-img-baby').src = CONFIG_SETTING.my_baby_pic;
+
+            const audioEl = document.getElementById('bg-romantic-music');
+            if (CONFIG_SETTING.custom_audio_url) {
+                document.getElementById('audio-source-element').src = CONFIG_SETTING.custom_audio_url;
+                audioEl.load();
+            }
+        }
+        window.addEventListener('DOMContentLoaded', initializeDirectConfig);
+
+        // --- MOUSE & TOUCH SPARKLES SPARK SYSTEM ---
+        window.addEventListener('mousemove', (e) => { createSparkle(e.clientX, e.clientY); });
+        window.addEventListener('touchmove', (e) => { if(e.touches[0]) createSparkle(e.touches[0].clientX, e.touches[0].clientY); });
+
+        function createSparkle(x, y) {
+            if (Math.random() > 0.3) return;
+            const p = document.createElement('div');
+            p.className = 'sparkle-particle';
+            p.style.left = x + 'px';
+            p.style.top = y + 'px';
+            const colors = ['#f43f5e', '#ec4899', '#f59e0b', '#dfc3ff'];
+            p.style.background = colors[Math.floor(Math.random() * colors.length)];
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 800);
+        }
+
+        // --- GLOBAL ROSE PETALS FALL ENGINE ---
+        function runGlobalRoseFall() {
+            const container = document.getElementById('global-rose-container');
+            setInterval(() => {
+                const petal = document.createElement('div');
+                petal.className = 'rose-petal';
+                petal.innerText = ['🌸', '🌹', '💖', '✨'][Math.floor(Math.random() * 4)];
+                petal.style.left = Math.random() * 100 + 'vw';
+                petal.style.animationDuration = Math.random() * 3 + 5 + 's';
+                petal.style.fontSize = Math.random() * 10 + 12 + 'px';
+                container.appendChild(petal);
+                setTimeout(() => petal.remove(), 7000);
+            }, 400);
+        }
+        runGlobalRoseFall();
+
+        // --- MUSIC ENGINE SYSTEMS ---
+        function startMusicEngine() {
+            if (isMelodyPlaying) return;
+            const audioEl = document.getElementById('bg-romantic-music');
+            audioEl.volume = parseFloat(document.getElementById('synth-volume').value) / 100;
+            audioEl.play().catch(e => console.log("Awaiting tap interaction."));
+            isMelodyPlaying = true;
+            document.getElementById('vinyl-disk').classList.add('anim-spin-vinyl');
+
+            melodyInterval = setInterval(() => {
+                const bars = document.querySelectorAll('.visualizer-bar');
+                bars.forEach(bar => {
+                    bar.style.height = (Math.random() * 28 + 6) + 'px';
+                });
+            }, 150);
+        }
+
+        function stopMusicEngine() {
+            isMelodyPlaying = false;
+            if (melodyInterval) clearInterval(melodyInterval);
+            document.getElementById('bg-romantic-music').pause();
+            document.getElementById('vinyl-disk').classList.remove('anim-spin-vinyl');
+            document.querySelectorAll('.visualizer-bar').forEach(b => b.style.height = '6px');
+        }
+
+        function toggleMusicPlayState() {
+            const toggleBtn = document.getElementById('music-play-toggle');
+            if (isMelodyPlaying) { stopMusicEngine(); toggleBtn.innerText = "▶️ Play"; }
+            else { startMusicEngine(); toggleBtn.innerText = "⏸️ Pause"; }
+        }
+
+        function adjustSynthVolume(val) {
+            document.getElementById('bg-romantic-music').volume = parseFloat(val) / 100;
+        }
+
+        // --- SLIDE NAVIGATION SYSTEM WITH SUDDEN RED TRANSITIONS ---
+        function changeSlide(nextNum) {
+            const flash = document.getElementById('system-flash');
+            flash.style.opacity = '1';
+
+            if (currentSlide === 1) startMusicEngine();
+
+            setTimeout(() => {
+                document.getElementById(`slide-${currentSlide}`).classList.add('hidden');
+                currentSlide = nextNum;
+                document.getElementById(`slide-${currentSlide}`).classList.remove('hidden');
+                
+                if ([3, 4, 5, 7].includes(currentSlide)) triggerPremiumConfetti();
+                flash.style.opacity = '0';
+            }, 150);
+        }
+
+        function triggerPremiumConfetti() {
+            confetti({ particleCount: 80, spread: 80, origin: { y: 0.6 }, colors: ['#ff0a54', '#ff477e', '#ff85a1', '#fbb1bd'] });
+        }
+
+        // --- INTERACTIVE SCRATCH CARD ENGINE ---
+        function initScratchCard() {
+            const canvas = document.getElementById('scratch-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = '#f472b6';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.font = '18px Outfit';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.fillText('🎁 Scratch with Finger! 🎁', canvas.width / 2, canvas.height / 2 + 5);
+
+            let isDrawing = false;
+
+            function scratch(x, y) {
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath();
+                ctx.arc(x, y, 22, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratch(e.offsetX, e.offsetY); });
+            canvas.addEventListener('mousemove', (e) => { if (isDrawing) scratch(e.offsetX, e.offsetY); });
+            canvas.addEventListener('mouseup', () => { isDrawing = false; });
+
+            canvas.addEventListener('touchstart', (e) => {
+                isDrawing = true;
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                scratch(touch.clientX - rect.left, touch.clientY - rect.top);
+            });
+            canvas.addEventListener('touchmove', (e) => {
+                if (isDrawing) {
+                    const rect = canvas.getBoundingClientRect();
+                    const touch = e.touches[0];
+                    scratch(touch.clientX - rect.left, touch.clientY - rect.top);
+                }
+            });
+            canvas.addEventListener('touchend', () => { isDrawing = false; });
+        }
+
+        // --- INTERACTIVE HEART-POP MINI-GAME ---
+        let bubbleInterval = null;
+        const sweetMessages = [
+            "My Heartbeats! ❤️", "You are Beautiful! ✨", "My World 🌍", "Forever Yours 🔐", "Thinking of U! 💭"
+        ];
+
+        function playPopSound() {
+            let tempCtx = new (window.AudioContext || window.webkitAudioContext)();
+            try {
+                const osc = tempCtx.createOscillator();
+                const gain = tempCtx.createGain();
+                osc.connect(gain);
+                gain.connect(tempCtx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, tempCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, tempCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, tempCtx.currentTime + 0.15);
+                osc.start();
+                osc.stop(tempCtx.currentTime + 0.15);
+            } catch(e){}
+        }
+
+        function createHeartBubble() {
+            const container = document.getElementById('bubbles-panel');
+            if (!container) return;
+
+            const heart = document.createElement('div');
+            heart.className = 'bubble-heart text-2xl anim-shimmer select-none';
+            heart.innerText = '💖';
+            heart.style.left = Math.random() * 80 + 'px';
+            heart.style.top = '120px';
+            
+            let pos = 120;
+            const flowId = setInterval(() => {
+                pos -= 1.5;
+                heart.style.top = pos + 'px';
+                if (pos < -30) {
+                    clearInterval(flowId);
+                    heart.remove();
+                }
+            }, 30);
+
+            heart.onclick = (e) => {
+                e.stopPropagation();
+                playPopSound();
+                clearInterval(flowId);
+                
+                const toast = document.createElement('span');
+                toast.className = 'absolute text-[9px] bg-rose-500 text-white font-bold px-2 py-0.5 rounded-full shadow-md z-30 transition-opacity duration-500';
+                toast.innerText = sweetMessages[Math.floor(Math.random() * sweetMessages.length)];
+                toast.style.left = heart.style.left;
+                toast.style.top = heart.style.top;
+                container.appendChild(toast);
+                
+                heart.remove();
+                setTimeout(() => toast.remove(), 800);
+            };
+
+            container.appendChild(heart);
+        }
+
+        function startBubblesGame() {
+            if (bubbleInterval) return;
+            bubbleInterval = setInterval(createHeartBubble, 1200);
+        }
+
+        function stopBubblesGame() {
+            if (bubbleInterval) {
+                clearInterval(bubbleInterval);
+                bubbleInterval = null;
+            }
+            const panel = document.getElementById('bubbles-panel');
+            if (panel) panel.innerHTML = '';
+        }
+
+        // --- SURPRISE ROOM CELEBRATION CONTROL (SLIDE 2) ---
+        function executePartyStep() {
+            playPopSound();
+            const btn = document.getElementById('party-interaction-btn');
+            const status = document.getElementById('party-zone-status');
+
+            if (currentSurpriseStep === 1) {
+                const container = document.getElementById('hanging-decorations-container');
+                container.innerHTML = '';
+                const colors = ['#f43f5e', '#f59e0b', '#10b981', '#3b82f6', '#ec4899'];
+                for(let i=0; i<15; i++) {
+                    const flag = document.createElement('div');
+                    flag.className = 'w-0 h-0 border-l-[10px] border-r-[10px] border-t-[18px] transition-transform duration-500';
+                    flag.style.borderLeftColor = 'transparent'; flag.style.borderRightColor = 'transparent';
+                    flag.style.borderTopColor = colors[i % colors.length];
+                    container.appendChild(flag);
+                }
+                container.classList.remove('opacity-0');
+                status.innerText = "Wow, room decorations are successfully up! 🎪";
+                btn.innerText = "🎈 Step 2: Release Heart Balloons";
+                currentSurpriseStep = 2;
+
+            } else if (currentSurpriseStep === 2) {
+                const container = document.getElementById('balloons-container');
+                const colors = ['#f43f5e', '#ec4899', '#ff85a1', '#a855f7'];
+                for(let i=0; i<12; i++) {
+                    const b = document.createElement('div');
+                    b.className = 'party-balloon w-10 h-12 rounded-full flex flex-col items-center justify-end text-white text-xs font-bold';
+                    b.innerText = "❤️";
+                    b.style.backgroundColor = colors[i % colors.length];
+                    b.style.left = (5 + i * 8) + '%';
+                    b.style.animationDelay = (i * 0.3) + 's';
+                    b.onclick = () => { b.style.transform = 'scale(0)'; triggerPremiumConfetti(); };
+                    
+                    const str = document.createElement('div');
+                    str.className = 'w-0.5 h-8 bg-slate-300 mt-1';
+                    b.appendChild(str);
+                    container.appendChild(b);
+                }
+                status.innerText = "Look at the romantic balloons rising! Tap to pop them! 🎈";
+                btn.innerText = "🎂 Step 3: Present Birthday Cake";
+                currentSurpriseStep = 3;
+
+            } else if (currentSurpriseStep === 3) {
+                const zone = document.getElementById('cake-assembly-zone');
+                zone.innerHTML = `
+                    <div class="flex flex-col items-center justify-end relative pb-2" id="rich-layered-cake">
+                        <div class="w-40 h-10 bg-amber-800 rounded-t-xl border-t-4 border-pink-400 z-20 shadow-md flex justify-around items-center px-2"><span class="text-xs">🍓</span><span class="text-xs">🍒</span><span class="text-xs">🍓</span></div>
+                        <div class="w-32 h-8 bg-pink-100 border-t-2 border-rose-300 z-30 shadow-inner flex justify-around items-center px-2"><span class="text-[9px]">💝</span><span class="text-[9px]">👑</span></div>
+                        <div class="w-2 h-8 bg-sky-400 z-40 absolute bottom-[46px] flex items-center justify-center">
+                            <div class="w-4 h-6 bg-amber-400 rounded-full absolute -top-5 anim-flicker" id="candle-flame"></div>
+                        </div>
+                    </div>
+                    <canvas id="cake-slash-canvas" width="256" height="192" class="absolute inset-0 z-50"></canvas>
+                `;
+                status.innerText = "Draw a line across the cake candle to cut it! 🎂";
+                btn.classList.add('hidden');
+                document.getElementById('cake-interactive-tip').classList.remove('hidden');
+                
+                initCakeSlashGesture();
+            }
+        }
+
+        // --- GESTURE SWIPE RECOGNITION FOR CAKE CUTTING ---
+        let isCakeCutDone = false;
+
+        function initCakeSlashGesture() {
+            const canvas = document.getElementById('cake-slash-canvas');
+            const ctx = canvas.getContext('2d');
+            let isDrawing = false;
+            let swipePoints = [];
+
+            function drawSlashLine(x, y) {
+                if (isCakeCutDone) return;
+                ctx.strokeStyle = '#f43f5e';
+                ctx.lineWidth = 4;
+                ctx.lineCap = 'round';
+                ctx.shadowColor = '#fda4af';
+                ctx.shadowBlur = 10;
+                
+                if (swipePoints.length === 0) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                    ctx.stroke();
+                }
+                swipePoints.push({x, y});
+                
+                if (swipePoints.length > 8) {
+                    const start = swipePoints[0];
+                    const end = swipePoints[swipePoints.length - 1];
+                    const distance = Math.hypot(end.x - start.x, end.y - start.y);
+                    if (distance > 70) {
+                        isCakeCutDone = true;
+                        performCakeCutting();
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    }
+                }
+            }
+
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                swipePoints = [];
+                drawSlashLine(e.offsetX, e.offsetY);
+            });
+            canvas.addEventListener('mousemove', (e) => {
+                if (isDrawing) drawSlashLine(e.offsetX, e.offsetY);
+            });
+            canvas.addEventListener('mouseup', () => { isDrawing = false; });
+
+            canvas.addEventListener('touchstart', (e) => {
+                isDrawing = true;
+                swipePoints = [];
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                drawSlashLine(touch.clientX - rect.left, touch.clientY - rect.top);
+            });
+            canvas.addEventListener('touchmove', (e) => {
+                if (isDrawing) {
+                    const rect = canvas.getBoundingClientRect();
+                    const touch = e.touches[0];
+                    drawSlashLine(touch.clientX - rect.left, touch.clientY - rect.top);
+                }
+            });
+            canvas.addEventListener('touchend', () => { isDrawing = false; });
+        }
+
+        // --- SYNTHESIZE "HAPPY BIRTHDAY" ---
+        const bdayMelodyNotes = [
+            261.63, 261.63, 293.66, 261.63, 349.23, 329.63,
+            261.63, 261.63, 293.66, 261.63, 392.00, 349.23
+        ];
+        const bdayNoteBeats = [500, 500, 1000, 1000, 1000, 2000, 500, 500, 1000, 1000, 1000, 2000];
+
+        function playHappyBirthdayMelody() {
+            let bdayAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (bdayAudioCtx.state === 'suspended') {
+                bdayAudioCtx.resume();
+            }
+            
+            let noteIdx = 0;
+            function playNextBdayNote() {
+                if (noteIdx >= bdayMelodyNotes.length) return;
+                try {
+                    const osc = bdayAudioCtx.createOscillator();
+                    const gain = bdayAudioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(bdayAudioCtx.destination);
+                    
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(bdayMelodyNotes[noteIdx], bdayAudioCtx.currentTime);
+                    
+                    gain.gain.setValueAtTime(0.12, bdayAudioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, bdayAudioCtx.currentTime + (bdayNoteBeats[noteIdx] / 1000) - 0.05);
+                    
+                    osc.start();
+                    osc.stop(bdayAudioCtx.currentTime + (bdayNoteBeats[noteIdx] / 1000));
+                    
+                    setTimeout(() => {
+                        noteIdx++;
+                        playNextBdayNote();
+                    }, bdayNoteBeats[noteIdx]);
+                } catch(e){}
+            }
+            playNextBdayNote();
+        }
+
+        function performCakeCutting() {
+            const flame = document.getElementById('candle-flame');
+            if (flame) {
+                flame.classList.remove('anim-flicker');
+                flame.className = "w-2 h-4 bg-slate-300/40 rounded-full absolute -top-3 animate-pulse";
+            }
+
+            const cakeTopLayer = document.getElementById('rich-layered-cake');
+            if (cakeTopLayer) {
+                cakeTopLayer.style.transform = "skewX(4deg) translateX(4px)";
+            }
+
+            playHappyBirthdayMelody();
+            triggerPremiumConfetti();
+            setTimeout(triggerPremiumConfetti, 1500);
+
+            document.getElementById('party-zone-status').innerText = "YAY! The cake is cut successfully! Happy Birthday My Queen! 🍰👑";
+            document.getElementById('cake-interactive-tip').classList.add('hidden');
+
+            document.getElementById('cake-slash-canvas').classList.add('hidden');
+            document.getElementById('party-next-btn').classList.remove('hidden');
+        }
+
+        // --- ENVELOPE OPEN LOGIC (SLIDE 7 - GUARANTEED STABLE CLICK) ---
+        function playChimeEffect() {
+            let chimeCtx = new (window.AudioContext || window.webkitAudioContext)();
+            try {
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                notes.forEach((freq, index) => {
+                    const osc = chimeCtx.createOscillator();
+                    const gain = chimeCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(chimeCtx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, chimeCtx.currentTime + (index * 0.08));
+                    gain.gain.setValueAtTime(0.08, chimeCtx.currentTime + (index * 0.08));
+                    gain.gain.exponentialRampToValueAtTime(0.001, chimeCtx.currentTime + (index * 0.08) + 0.3);
+                    osc.start(chimeCtx.currentTime + (index * 0.08));
+                    osc.stop(chimeCtx.currentTime + (index * 0.08) + 0.3);
+                });
+            } catch(e) {
+                console.warn(e);
+            }
+        }
+
+        function openEnvelopeLetter() {
+            playChimeEffect();
+            const flap = document.getElementById('envelope-flap');
+            if (flap) {
+                flap.style.transform = 'scaleY(-1)';
+            }
+            setTimeout(() => {
+                const envelopeWrapper = document.getElementById('envelope-wrapper');
+                if (envelopeWrapper) envelopeWrapper.style.display = 'none';
+                
+                const letterDisplay = document.getElementById('love-letter-display');
+                if (letterDisplay) letterDisplay.classList.remove('hidden');
+                
+                triggerPremiumConfetti();
+            }, 500);
+        }
+    </script>
+</body>
+</html>
+
+```
