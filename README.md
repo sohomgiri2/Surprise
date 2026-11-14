@@ -1,74 +1,49 @@
-# Music56 Liquid Studio Edition 2.2.0
+# Music56 — Liquid Studio Repair 2.3.0
 
-**Music56 — Pure Sound. Fluid Experience.**  
-Designed and developed by **Sohom Giri** · Instagram: **@itz_sg_063**
+**Pure Sound. Fluid Experience.**
 
-A mobile-first, offline-capable personal music player PWA with a Nothing OS × iOS glass interface.
+Designed and developed by **Sohom Giri** · Instagram **@itz_sg_063**.
 
-## Feature set
+Music56 is a mobile-first, offline-capable personal music player PWA with a Nothing-inspired interface and iOS-style liquid glass surfaces.
 
-1. Multi-file audio import
-2. Folder selection where supported
-3. Recursive folder scanning where supported
-4. Saved folder-handle reconnect flow
-5. IndexedDB audio-blob persistence
-6. Local metadata persistence
-7. Duplicate detection using path/name/size/modified time
-8. Search across title, artist and album
-9. Favorites
-10. Recently played history
-11. Play all
-12. Shuffle playback
-13. Repeat all / repeat one
-14. Previous / next controls
-15. Playback queue
-16. Create playlists
-17. Add current track to playlist
-18. Play a playlist
-19. Rename track title and artist metadata
-20. Remove track from Music56 library
-21. Lyrics editor with local saving
-22. Fullscreen mode
-23. Persistent mini-player
-24. 10-band equalizer
-25. Bass boost
-26. Treble control
-27. Stereo balance
-28. 3D spatial pan mode
-29. 8D-style rotating stereo pan
-30. 4D-style combined spatial effect
-31. Live audio visualizer
-32. Master volume
-33. Mute / unmute
-34. Playback speed control
-35. Sleep timer with cancel
-36. Listening statistics
-37. JSON settings/playlists backup export
-38. JSON backup import
-39. Library-list export
-40. Storage quota estimate
-41. Persistent storage request
-42. PWA install manifest
-43. Offline app-shell cache
-44. Android media-session controls where browser supports them
-45. Responsive mobile/tablet/desktop layout
-46. Developer profile and project credits
+## Version 2.3.0 repair notes
 
-## Android/browser limitations
+This update fixes several weak points in the previous build: song rows now show artist/album separately from duration; imports probe duration and read common metadata; import runs in small batches; failed IndexedDB saves are reported instead of being silently treated as success; player UI resets correctly when a track is removed; Studio EQ/tone/balance/reverb settings persist and are reapplied when the audio graph starts; bypass restores the selected processing settings; the compressor toggle controls the compressor; and the service-worker cache is versioned for this release.
 
-A PWA cannot silently scan all Android storage or access every downloaded track. The user must select files or a folder. `showDirectoryPicker()` is not supported in every Android browser. If unavailable, use **Add music** to select multiple files. Folder and file handles may require permission again after refresh. IndexedDB persistence is subject to browser quota and browser/device data-clearing policies. Export backups regularly.
+## What is included
 
-The JSON backup contains app settings, favorites, recent history, playlists, lyrics and metadata. It does **not** embed the original audio files. Use a separate copy of your music files as the reliable audio backup.
+- Multi-file audio selection and supported folder scanning
+- Android-friendly first-use guide with **OK** and **Don't show this again**
+- Reopen the guide any time from **How to add songs**
+- Song title, artist, album and duration display when available
+- MP3 ID3 tag reading; basic M4A/MP4 atom metadata reading; filename artist-title fallback
+- Duration probing during import with a timeout, plus metadata refresh on playback
+- IndexedDB storage for selected audio blobs and song metadata
+- Folder handles and reconnect flow on browsers that support the File System Access API
+- Duplicate detection, search, favorites and recently played
+- Play all, shuffle, repeat, previous/next, queue and playlists
+- Track title/artist editing, lyrics editor and listening statistics
+- Fullscreen, mini-player and browser Media Session integration where supported
+- 10-band EQ with presets, bass, treble, stereo balance and echo/delay mix
+- 3D Space, 8D Orbit and 4D Motion stereo panning modes
+- Live frequency visualizer, playback speed, master volume and mute
+- Dynamic compressor toggle, audio-processing bypass and sleep timer
+- JSON settings/library backup and restore, storage estimate and persistence request
+- PWA manifest, offline app shell and responsive mobile/tablet/desktop layout
+- Developer profile, version and Instagram link
 
-The 3D/8D/4D-labelled effects are software stereo panning effects, not physical 4D or true multichannel surround sound. Media Session controls depend on browser support.
+## Song details and compatibility
+
+Artist and album values are read from supported embedded metadata. The importer reads common MP3 ID3 fields and attempts common M4A/MP4 metadata atoms. If a file has no artist tag, Music56 tries an `Artist - Track` filename pattern; otherwise it displays **Unknown artist**. Duration is read from the browser's audio metadata. If the browser cannot decode the file or its metadata, duration may display as `--:--` until playback metadata becomes available.
+
+## Android file access limits
+
+A PWA cannot silently scan all Android storage. The user must select audio files or choose a folder where the browser supports it. If the folder picker is unavailable, use **Add music** and select multiple files from Downloads, Music or Audio. A browser may ask for folder permission again later.
+
+IndexedDB storage is subject to browser quota and browser/device data-clearing policies. If the device runs out of storage, not every selected audio blob may be saved; Music56 displays a save warning. Keep original music files and export regular backups. JSON backups contain app state, playlists, favorites, lyrics and metadata, but not the audio file contents.
+
+The 3D/8D/4D names refer to stereo panning effects, not physical 4D or true multichannel surround. Audio effects and Media Session controls depend on browser support.
 
 ## Deploy
 
-Upload the contents of this folder (including `index.html`, `manifest.json`, `service-worker.js`, and `icons/`) to the repository root. Enable GitHub Pages from **Settings → Pages → Deploy from a branch → main → /(root)**. Open the HTTPS URL in Android Chrome and use **Add to Home screen / Install app**.
-
-
-## Music56 2.2.0 updates
-- Song rows show artist, duration and album when metadata is available. MP3 ID3 artist/album/title tags are read during import; duration is probed before the library is rendered.
-- First-run song import guide explains how to select audio files on Android. The OK button closes it; “Don't show this again” stores the preference in this browser.
-- Liquid Glass Studio redesign with sound presets (Flat, Deep Bass, Vocal, Pop, Rock, Bright, Night), 10-band EQ, spatial modes, tone shaping, live spectrum and playback speed.
-- Metadata availability depends on tags embedded in the audio file and browser codec support. Missing artist tags appear as “Unknown artist” and can be edited from the song menu.
+Upload the **contents** of this folder (not an extra nested folder) to the repository root. Keep `index.html`, `manifest.json`, `service-worker.js` and `icons/` together. Enable GitHub Pages from **Settings → Pages → Deploy from a branch → main → /(root)**. Open the HTTPS site in Android Chrome. If an old version remains visible, refresh the site or close/reopen the installed PWA so the updated service-worker cache can activate.

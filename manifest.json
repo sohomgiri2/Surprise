@@ -1,7 +1,7 @@
 {
-  "name": "Music56 — Pure Sound. Fluid Experience.",
+  "name": "Music56 — Liquid Studio Repair",
   "short_name": "Music56",
-  "description": "Premium offline-first personal music player",
+  "description": "Offline-first Music56 player with Liquid Studio",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
