@@ -1,23 +1,23 @@
-# Music56
+# Music56 v2 — Nothing × Glass
 
-Premium offline-first music player PWA — Nothing-inspired glass UI.
+Premium mobile-first music player PWA by Sohom Giri (@itz_sg_063).
 
-## Files
-- `index.html` — app UI, player, library and audio processing
-- `manifest.json` — installable PWA metadata
-- `service-worker.js` — offline app-shell cache
-- `icons/` — install icons
+## What's improved
+- Folder scanning stores supported file handles and local audio blobs in IndexedDB.
+- Reconnect/rescan is a user action, so browsers can request folder permission inside a user gesture.
+- Folder-picker fallback uses Android/browser folder input (`webkitdirectory`) where supported, plus multi-file audio selection.
+- Fullscreen button, premium frosted-glass / Nothing-inspired interface, mini-player, 10-band EQ, bass/treble, stereo panning, visualizer, lyrics, favorites, recent tracks, shuffle/repeat, sleep timer, backup/restore, and offline app shell.
 
-## Run / deploy
-Deploy the complete folder to GitHub Pages or Vercel over HTTPS. Open the deployed URL in Android Chrome and choose **Install app** / **Add to Home screen**.
+## Important Android/browser limitation
+A web app cannot silently read every file on Android. Browser support for `showDirectoryPicker()` and folder inputs differs by browser/version. If the folder picker is unsupported, use **Add music** to select multiple audio files, or **Music folder** to try the browser folder-selection fallback. Music56 saves selected audio blobs and app metadata in IndexedDB so they can remain available after refresh, subject to browser storage quota. Very large libraries may exceed available storage; keep backups and check storage usage.
 
-## Local music access
-Use **Add music** to choose audio files. Browsers may not remember ordinary file selections after reload. Where supported, **Music folder** uses the File System Access API and stores a directory handle in IndexedDB; the browser may still require permission again. The app cannot silently scan all Android storage.
+For a previously connected directory, after refresh tap **Music folder** / reconnect to re-authorize and rescan. Browsers may revoke access or require a fresh permission prompt. No website can guarantee access after the user clears site data, browser eviction, or device changes.
 
-## Audio
-3D/8D-style modes use browser stereo panning. EQ and bass/treble controls use Web Audio filters. The 4D option combines supported stereo movement and visual response; it does not provide physical effects or hardware surround sound. Browser audio capabilities vary.
+## Deploy
+Upload all project files and the `icons` folder to the repository root. Enable GitHub Pages in Settings → Pages, or import the repository into Vercel. Use HTTPS. Open the published URL in Android Chrome and choose **Install app / Add to Home screen**.
 
-## Data
-Playlists/favorites/lyrics/preferences are stored locally in IndexedDB. Export a JSON backup regularly. Audio files are not copied into the app database; the original files remain on your device. If browser storage is cleared, local app data can be lost.
+## Audio effects
+3D/8D-style modes use stereo panning; EQ/bass/treble use Web Audio filters. The 4D label is a combined panning/visual effect, not physical 4D or true hardware surround sound. Browser/device support varies.
 
-Developer: Sohom Giri · @itz_sg_063
+## Backup
+Use Settings → Export backup regularly. The JSON backup contains Music56 app data and metadata, not copies of the audio files.
