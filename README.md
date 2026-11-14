@@ -1,4 +1,4 @@
-# Music56 Enhanced Edition 2.1.0
+# Music56 Liquid Studio Edition 2.2.0
 
 **Music56 — Pure Sound. Fluid Experience.**  
 Designed and developed by **Sohom Giri** · Instagram: **@itz_sg_063**
@@ -65,3 +65,10 @@ The 3D/8D/4D-labelled effects are software stereo panning effects, not physical 
 ## Deploy
 
 Upload the contents of this folder (including `index.html`, `manifest.json`, `service-worker.js`, and `icons/`) to the repository root. Enable GitHub Pages from **Settings → Pages → Deploy from a branch → main → /(root)**. Open the HTTPS URL in Android Chrome and use **Add to Home screen / Install app**.
+
+
+## Music56 2.2.0 updates
+- Song rows show artist, duration and album when metadata is available. MP3 ID3 artist/album/title tags are read during import; duration is probed before the library is rendered.
+- First-run song import guide explains how to select audio files on Android. The OK button closes it; “Don't show this again” stores the preference in this browser.
+- Liquid Glass Studio redesign with sound presets (Flat, Deep Bass, Vocal, Pop, Rock, Bright, Night), 10-band EQ, spatial modes, tone shaping, live spectrum and playback speed.
+- Metadata availability depends on tags embedded in the audio file and browser codec support. Missing artist tags appear as “Unknown artist” and can be edited from the song menu.
